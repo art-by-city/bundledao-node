@@ -1,0 +1,33 @@
+{
+  "name": "@artbycity/bundledao-node",
+  "version": "0.1.0",
+  "description": "BundleDAO Arweave ANS-104 Bundle Delegation Node",
+  "keywords": [
+    "arweave",
+    "deso",
+    "ans-104",
+    "bundledao"
+  ],
+  "author": "Jim Toth <jim@artby.city>",
+  "license": "AGPL-3.0-only",
+  "main": "./dist/src/app.js",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "start": "node ./dist/src",
+    "dev": "concurrently \"tsc -w --declaration\" \"nodemon --watch ./dist/ --exec npm run start\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.0",
+    "chai": "^4.3.7",
+    "mocha": "^10.1.0",
+    "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  }
+}
