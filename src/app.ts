@@ -94,13 +94,19 @@ export default class BundleDAONode {
       await this.arweave.transactions.sign(tx, this.arweaveKeyfile)
       console.log('SIGNED TX', tx.id)
 
-      const { status, statusText } = await this.arweave.transactions.post(tx)
+      const {
+        status,
+        statusText,
+        data: postData
+      } = await this.arweave.transactions.post(tx)
+
+      console.log('post result', status, statusText, postData)
 
       // Mine the result for the BundleDAO Demo!
       const miningResult = await axios.get('http://localhost:1984/mine')
       console.log('mining result', miningResult.status, miningResult.statusText)
 
-      ctx.status = status
+      ctx.status = 200
       ctx.body = tx.id
 
       return
