@@ -1,8 +1,6 @@
 import 'dotenv/config'
 import Koa from 'koa'
 import Router from '@koa/router'
-import json from 'koa-json'
-import bodyParser from 'koa-bodyparser'
 import rawBody from 'raw-body'
 import { Server } from 'http'
 import { JWKInterface } from 'arweave/node/lib/wallet'
@@ -10,9 +8,9 @@ import Arweave from 'arweave'
 import { knex, Knex } from 'knex'
 import { join } from 'path'
 import { existsSync, mkdirSync } from 'fs'
-import secp256k1 from 'secp256k1'
 import { ec as EC } from 'elliptic'
 import bs58check from 'bs58check'
+import axios from 'axios'
 
 import { up } from './db/init'
 
@@ -97,6 +95,10 @@ export default class BundleDAONode {
       console.log('SIGNED TX', tx.id)
 
       const { status, statusText } = await this.arweave.transactions.post(tx)
+
+      // Mine the result for the BundleDAO Demo!
+      const miningResult = await axios.get('http://localhost:1984/mine')
+      console.log('mining result', miningResult.status, miningResult.statusText)
 
       ctx.status = status
       ctx.body = tx.id
