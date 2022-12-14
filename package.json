@@ -23,7 +23,7 @@
     "start": "node ./dist",
     "dev": "nodemon ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "npm run build"
+    "version": "npm run build"
   },
   "devDependencies": {
     "@types/bs58check": "^2.1.0",
