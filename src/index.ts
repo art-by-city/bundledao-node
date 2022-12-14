@@ -5,7 +5,6 @@ import { readFile } from 'fs/promises'
 import BundleDAONode from './app'
 
 ;(async () => {
-  const DESO_SEEDHEX = process.env.DESO_SEEDHEX || ''
   const ARWEAVE_KEYFILE = process.env.ARWEAVE_KEYFILE || ''
   const ARWEAVE_PROTOCOL = process.env.ARWEAVE_PROTOCOL || 'http'
   const ARWEAVE_HOST = process.env.ARWEAVE_HOST || 'localhost'
@@ -18,7 +17,6 @@ import BundleDAONode from './app'
     (await readFile(ARWEAVE_KEYFILE)).toString()
   )
   const bundleDAONode = new BundleDAONode(
-    DESO_SEEDHEX,
     arweaveKeyfile,
     new Arweave({
       protocol: ARWEAVE_PROTOCOL,
