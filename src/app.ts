@@ -8,9 +8,10 @@ import { knex, Knex } from 'knex'
 import { join } from 'path'
 import { existsSync, mkdirSync } from 'fs'
 
-import { AuthState } from './auth'
-import { up } from './db/init'
-import { BalancesRouter, BundlesRouter } from './routes'
+import { buildContainer } from './inversify.config'
+import { AuthState } from './interface/middleware/auth'
+import { up } from './infra/db/init'
+import { IRouter, ROUTERS } from './interface/router'
 
 export type State = Koa.DefaultState & {
   auth?: AuthState
@@ -47,25 +48,18 @@ export default class BundleDAONode {
   }
 
   private build() {
+    const container = buildContainer(this.arweave, this.arweaveKeyfile)
     const router = new Router()
-
-    router.get('/healthcheck', (ctx) => {
-      ctx.body = { health: 'ok' }
-
-      return
-    })
-
-    const routers = [
-      new BalancesRouter().router,
-      new BundlesRouter(
-        this.arweave,
-        this.arweaveKeyfile
-      ).router
+    const routers: { path: string, id: symbol }[] = [
+      { path: '/balances', id: ROUTERS.BalancesRouter },
+      { path: '/bundles', id: ROUTERS.BundlesRouter },
+      { path: '/healthcheck', id: ROUTERS.HealthRouter }
     ]
 
     for (let i = 0; i < routers.length; i++) {
-      const subRouter = routers[i]
-      router.use(subRouter.routes(), subRouter.allowedMethods())
+      const { path, id } = routers[i]
+      const subRouter = container.get<IRouter<State, Context>>(id).router
+      router.use(path, subRouter.routes(), subRouter.allowedMethods())
     }
 
     this.app
