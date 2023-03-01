@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken'
 
-import { ParameterizedContext } from '../../app'
-import { desoPublicKeyToPemEncodedPublicKey } from '../../util'
+import { ParameterizedContext } from '../../../../app'
+import { desoPublicKeyToPemEncodedPublicKey } from '../../../../util'
 
 export default async function (
   ctx: ParameterizedContext,
@@ -24,5 +24,7 @@ export default async function (
     }
   } else {
     ctx.status = 401
+
+    return
   }
 }

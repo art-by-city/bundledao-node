@@ -1,26 +1,28 @@
+import { inject, injectable } from 'inversify'
 import Router from '@koa/router'
 import rawBody from 'raw-body'
 import Arweave from 'arweave'
 import { JWKInterface } from 'arweave/node/lib/wallet'
 import axios from 'axios'
 
-import { Context, State } from '../app'
-import { jwt } from '../auth'
+import { Context, State } from '../../app'
+import { MiddlewareFunction } from '../middleware'
+import { IRouter } from './'
 
-export default class BundlesRouter {
-  router: Router<State, Context> = new Router<State, Context>({
-    prefix: '/bundle'
-  })
+@injectable()
+export default class BundlesRouter implements IRouter<State, Context> {
+  router: Router<State, Context> = new Router<State, Context>()
 
   constructor(
-    private arweave: Arweave,
-    private arweaveKeyfile: JWKInterface
+    @inject('Arweave') private arweave: Arweave,
+    @inject('ArweaveKeyfile') private arweaveKeyfile: JWKInterface,
+    @inject('JWT') private jwt: MiddlewareFunction
   ) {
     this.build()
   }
 
   private build() {
-    this.router.use(jwt)
+    this.router.use(this.jwt)
 
     this.router.post('/', async (ctx) => {
       let data
